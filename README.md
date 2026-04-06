@@ -5,4 +5,7 @@ ines_tl
 
 Traffic Light
 
-Blink internal LED
+Blink external LED
+Kconfig
+Logging
+Refactoring

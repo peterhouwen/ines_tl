@@ -2,25 +2,38 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "esp_log.h"
+#include "sdkconfig.h"
 
-#define BLINK_GPIO 25
-#define BLINK_PERIOD 500
+static const char *TAG = "ines_tl";
+
+#define BLINK_GPIO CONFIG_BLINK_GPIO
+
+static uint8_t s_led_state = 0;
+
+static void blink_led(void)
+{
+    gpio_set_level(BLINK_GPIO, s_led_state);
+}
+
+static void configure_led(void)
+{
+    gpio_reset_pin(BLINK_GPIO);
+    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
+}
 
 void app_main(void)
 {
-    int ledstate = 0;
+    configure_led();
+    const TickType_t xDelay = CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS;
 
-    gpio_reset_pin(BLINK_GPIO);
-    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
-
-    const TickType_t xDelay = BLINK_PERIOD / portTICK_PERIOD_MS;
     while(1)
     {
-        printf("Ledstate: %d\n", ledstate);
-        gpio_set_level(BLINK_GPIO, ledstate);
-        //
+        ESP_LOGI(TAG, "Turning the led %s!", s_led_state ? "ON" : "OFF");
+        blink_led();
+
+        s_led_state = !s_led_state;
         vTaskDelay( xDelay );
-        ledstate = !ledstate;
     }
 
 }
