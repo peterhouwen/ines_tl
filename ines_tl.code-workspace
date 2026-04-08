@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../../../../esp/v6.0/esp-idf"
+		},
+		{
+			"path": "../../../Repos/GitHub/lora-end-node"
 		}
 	],
 	"settings": {}
