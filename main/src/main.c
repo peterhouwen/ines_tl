@@ -11,11 +11,11 @@ TaskHandle_t xHandle = NULL;
 
 void app_main(void)
 {
-    BaseType_t result = xTaskCreate( heartbeat, "Heartbeat", 1024, NULL, 10, &xHandle );
+    esp_err_t ret = xTaskCreate( heartbeat, "Heartbeat", 1024, NULL, 10, &xHandle );
     configASSERT( xHandle );
 
-    if (result != pdPASS) {
-        ESP_LOGE(TAG, "Task creation failed!");
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Task creation failed: %s", esp_err_to_name(ret));
     }
 
     for( ;; )
