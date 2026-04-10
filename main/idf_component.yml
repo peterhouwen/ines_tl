@@ -1,0 +1,5 @@
+dependencies:
+  heartbeat:
+    # Git repository (over SSH or HTTPS)
+    git: https://git@github.com/peterhouwen/esp-idf_components.git
+    path: components/heartbeat

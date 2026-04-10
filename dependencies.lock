@@ -1,0 +1,18 @@
+dependencies:
+  heartbeat:
+    component_hash: ca399367a2aaf647fa7401785df1461a5d52766a7975196e99d02f4543e3d9fa
+    dependencies: []
+    source:
+      git: https://git@github.com/peterhouwen/esp-idf_components.git
+      path: components/heartbeat
+      type: git
+    version: 89fcc71679254d13614d56268e47d62591bb5525
+  idf:
+    source:
+      type: idf
+    version: 6.0.0
+direct_dependencies:
+- heartbeat
+manifest_hash: 3d38a587ad1c59a3b4b2ba0b5dbcdadce2ae93b166f95f1407ad5ae108faba57
+target: esp32
+version: 3.0.0

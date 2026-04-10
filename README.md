@@ -1,11 +1,6 @@
 # ines
 Introduction to Embedded Systems
 
-ines_tl
+## ines_tl Traffic Light
 
-Traffic Light
-
-Blink external LED
-Kconfig
-Logging
-Refactoring
+Heartbeat implemented as component and running as a task.
