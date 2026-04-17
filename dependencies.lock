@@ -1,12 +1,12 @@
 dependencies:
   heartbeat:
-    component_hash: ca399367a2aaf647fa7401785df1461a5d52766a7975196e99d02f4543e3d9fa
+    component_hash: 941b9916975dc8afc79f4b9806dc9f233872358ae31badec30f1cdcb05a2e6b2
     dependencies: []
     source:
       git: https://git@github.com/peterhouwen/esp-idf_components.git
       path: components/heartbeat
       type: git
-    version: 89fcc71679254d13614d56268e47d62591bb5525
+    version: 0bcb130223ad5eba52bec5542a8b510a7a13bba1
   idf:
     source:
       type: idf
