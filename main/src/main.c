@@ -19,6 +19,10 @@
 #define MCP23017_ADDR               0x20                                   /*!< MCP23017 address */
 
 static const char *TAG = "ines_tl";
+i2c_master_bus_handle_t bus_handle;
+i2c_master_dev_handle_t dev_handle;
+
+TaskHandle_t xHandle_TL = NULL;
 
 /**
  * @brief i2c master initialization
@@ -60,20 +64,8 @@ static esp_err_t mcp23017_register_write_byte(i2c_master_dev_handle_t dev_handle
     return i2c_master_transmit(dev_handle, write_buf, sizeof(write_buf), I2C_MASTER_TIMEOUT_MS);
 }
 
-void app_main(void)
+void traffic_light(void *arg)
 {
-    launch_heartbeat();
-
-    uint8_t data[2];
-    i2c_master_bus_handle_t bus_handle;
-    i2c_master_dev_handle_t dev_handle;
-    i2c_master_init(&bus_handle, &dev_handle);
-    ESP_LOGI(TAG, "I2C initialized successfully");
-
-    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x00, 0x00)); // GPA OUTPUT
-    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x01, 0x00)); // GPB OUTPUT
-    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x00));
-
     enum State {
         DRIVE,
         SLOW,
@@ -105,6 +97,39 @@ void app_main(void)
             break;
         }
         state = next_state;
+
+    }
+}
+
+int launch_traffic_light()
+{
+    esp_err_t ret = xTaskCreate( traffic_light, "Traffic light", 2048, NULL, 1, &xHandle_TL );
+    configASSERT( xHandle_TL );
+
+    if (ret != pdPASS) {
+        ESP_LOGE(TAG, "Task creation failed: %s", esp_err_to_name(ret));
+    }
+
+    return 0;
+}
+
+void app_main(void)
+{
+    launch_heartbeat();
+
+    uint8_t data[2];
+    i2c_master_init(&bus_handle, &dev_handle);
+    ESP_LOGI(TAG, "I2C initialized successfully");
+
+    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x00, 0x00)); // GPA OUTPUT
+    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x01, 0x00)); // GPB OUTPUT
+    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x00));
+
+    launch_traffic_light();
+
+    for(;;)
+    {
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
+
 }
