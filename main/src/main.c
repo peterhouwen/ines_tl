@@ -22,7 +22,19 @@ static const char *TAG = "ines_tl";
 i2c_master_bus_handle_t bus_handle;
 i2c_master_dev_handle_t dev_handle;
 
+TaskHandle_t xHandle_CTRL = NULL;
 TaskHandle_t xHandle_TL = NULL;
+TaskHandle_t xHandle_TL2 = NULL;
+
+typedef enum {
+    INIT,
+    DRIVE,
+    SLOW,
+    STOP
+} t_state_machine;
+
+static t_state_machine state = INIT;
+static t_state_machine state2 = INIT;
 
 /**
  * @brief i2c master initialization
@@ -64,39 +76,88 @@ static esp_err_t mcp23017_register_write_byte(i2c_master_dev_handle_t dev_handle
     return i2c_master_transmit(dev_handle, write_buf, sizeof(write_buf), I2C_MASTER_TIMEOUT_MS);
 }
 
-void traffic_light(void *arg)
+void controller(void *arg)
 {
-    enum State {
-        DRIVE,
-        SLOW,
-        STOP
-    } state = DRIVE;
+    ESP_LOGI(TAG, "controller");
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
 
     while (true)
     {
-        enum State next_state = state;
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        state = DRIVE;
+        state2 = STOP;
+        ESP_LOGI(TAG, "road");
+
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        state = STOP;
+        state2 = DRIVE;
+        ESP_LOGI(TAG, "crosswalk");
+    }
+}
+
+int launch_controller()
+{
+    esp_err_t ret = xTaskCreate( controller, "Controller", 2048, NULL, 1, &xHandle_CTRL );
+    configASSERT( xHandle_CTRL );
+
+    if (ret != pdPASS) {
+        ESP_LOGE(TAG, "Task creation failed: %s", esp_err_to_name(ret));
+    }
+
+    return 0;
+}
+
+void traffic_light(void *arg)
+{
+
+    while (true)
+    {
         switch (state)
         {
+        case INIT:
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x02)); // yellow
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x00)); // yellow
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+            break;
         case DRIVE:
             ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x01)); // green
-            ESP_LOGI(TAG, "green");
-            vTaskDelay(5000 / portTICK_PERIOD_MS);
-            next_state = SLOW;
             break;
         case SLOW:
             ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x02)); // yellow
-            ESP_LOGI(TAG, "yellow");
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
-            next_state = STOP;
             break;
         case STOP:
             ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x04)); // red
-            ESP_LOGI(TAG, "red");
-            vTaskDelay(3000 / portTICK_PERIOD_MS);
-            next_state = DRIVE;
             break;
         }
-        state = next_state;
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+
+    }
+}
+
+void traffic_light2(void *arg)
+{
+
+    while (true)
+    {
+        switch (state2)
+        {
+        case INIT:
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x04)); // red
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x00)); // red
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+            break;
+        case SLOW:
+            break;
+        case DRIVE:
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x01)); // green
+            break;
+        case STOP:
+            ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x04)); // red
+            break;
+        }
+        vTaskDelay(100 / portTICK_PERIOD_MS);
 
     }
 }
@@ -105,6 +166,18 @@ int launch_traffic_light()
 {
     esp_err_t ret = xTaskCreate( traffic_light, "Traffic light", 2048, NULL, 1, &xHandle_TL );
     configASSERT( xHandle_TL );
+
+    if (ret != pdPASS) {
+        ESP_LOGE(TAG, "Task creation failed: %s", esp_err_to_name(ret));
+    }
+
+    return 0;
+}
+
+int launch_traffic_light2()
+{
+    esp_err_t ret = xTaskCreate( traffic_light2, "Traffic light2", 2048, NULL, 1, &xHandle_TL2 );
+    configASSERT( xHandle_TL2 );
 
     if (ret != pdPASS) {
         ESP_LOGE(TAG, "Task creation failed: %s", esp_err_to_name(ret));
@@ -123,9 +196,12 @@ void app_main(void)
 
     ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x00, 0x00)); // GPA OUTPUT
     ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x01, 0x00)); // GPB OUTPUT
+    ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x12, 0x00));
     ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x00));
 
+    launch_controller();
     launch_traffic_light();
+    launch_traffic_light2();
 
     for(;;)
     {
