@@ -5,4 +5,6 @@ Introduction to Embedded Systems
 
 Heartbeat implemented as component and running as a task.
 
-Traffic light (single unit) running as a task.
+Traffic light (road) running as a task.
+Traffic light (crosswalk) running as a task.
+Controller running as a task.
