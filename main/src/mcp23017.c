@@ -12,7 +12,7 @@
 
 #define I2C_MASTER_TIMEOUT_MS       1000
 
-i2c_master_bus_handle_t bus_handle;
+i2c_master_bus_handle_t handle;
 i2c_master_dev_handle_t dev_handle;
 
 /**
@@ -20,14 +20,14 @@ i2c_master_dev_handle_t dev_handle;
  */
 void mcp23017_init(void)
 {
-    ESP_ERROR_CHECK(i2c_master_get_bus_handle(0, &bus_handle));
+    ESP_ERROR_CHECK(i2c_master_get_bus_handle(0, &handle));
 
     i2c_device_config_t dev_config = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
         .device_address = MCP23017_ADDR,
         .scl_speed_hz = I2C_MASTER_FREQ_HZ,
     };
-    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_config, &dev_handle));
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(handle, &dev_config, &dev_handle));
 }
 
 /****************************************************************************

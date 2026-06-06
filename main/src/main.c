@@ -21,7 +21,6 @@
 
 static const char *TAG = "ines_tl";
 i2c_master_bus_handle_t bus_handle;
-i2c_master_dev_handle_t dev_handle;
 
 TaskHandle_t xHandle_CTRL = NULL;
 TaskHandle_t xHandle_TL = NULL;
