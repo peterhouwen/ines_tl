@@ -14,7 +14,7 @@
 
 static const char *TAG = "traffic light 2";
 
-//static t_state_machine state2 = INIT;
+extern t_state_machine state2;
 
 /****************************************************************************
  * Function : traffic_light2()
@@ -27,8 +27,8 @@ void traffic_light2(void *arg)
 
     while (true)
     {
-        //switch (state2)
-        switch(0)
+        switch (state2)
+        //switch(0)
         {
         case INIT:
             io_handle.register_write_byte(0x13, 0x04); // red

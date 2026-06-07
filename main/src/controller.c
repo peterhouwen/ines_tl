@@ -13,8 +13,8 @@
 
 static const char *TAG = "controller";
 
-static t_state_machine state = INIT;
-static t_state_machine state2 = INIT;
+extern t_state_machine state;
+extern t_state_machine state2;
 
 /****************************************************************************
  * Function : controller()
