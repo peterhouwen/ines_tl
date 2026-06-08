@@ -8,10 +8,6 @@
 #include "controller.h"
 #include "traffic_light1.h"
 #include "traffic_light2.h"
-#include "types.h"
-
-t_state_machine state = INIT;
-t_state_machine state2 = INIT;
 
 void app_main(void)
 {

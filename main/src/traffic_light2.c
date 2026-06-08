@@ -11,10 +11,9 @@
 #include "esp_log.h"
 #include "types.h"
 #include "io_hal.h"
+#include "externals.h"
 
 static const char *TAG = "traffic light 2";
-
-extern t_state_machine state2;
 
 /****************************************************************************
  * Function : traffic_light2()
