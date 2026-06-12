@@ -26,26 +26,19 @@ void traffic_light2(void *arg)
 
     while (true)
     {
-        switch (state2)
-        //switch(0)
+        switch (crosswalk)
         {
-        case INIT:
+        case HALT:
             io_handle.register_write_byte(0x13, 0x04); // red
-            //ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x04)); // red
-            vTaskDelay(500 / portTICK_PERIOD_MS);
-            io_handle.register_write_byte(0x13, 0x00); // off
-            //ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x00)); // off
-            vTaskDelay(500 / portTICK_PERIOD_MS);
             break;
-            case SLOW:
-            break;
-            case DRIVE:
+        case WALK:
             io_handle.register_write_byte(0x13, 0x01); // green
-            //ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x01)); // green
             break;
-            case STOP:
-            io_handle.register_write_byte(0x13, 0x04); // red
-            //ESP_ERROR_CHECK(mcp23017_register_write_byte(dev_handle, 0x13, 0x04)); // red
+        case HURRY:
+            io_handle.register_write_byte(0x13, 0x00); // off
+            vTaskDelay(250 / portTICK_PERIOD_MS);
+            io_handle.register_write_byte(0x13, 0x01); // green
+            vTaskDelay(250 / portTICK_PERIOD_MS);
             break;
         }
         vTaskDelay(100 / portTICK_PERIOD_MS);

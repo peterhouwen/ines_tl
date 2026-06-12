@@ -14,5 +14,5 @@
 /****************************************************************************
  * External variables
  ****************************************************************************/
-extern t_state_machine state;
-extern t_state_machine state2;
+extern t_state_machine_A road;
+extern t_state_machine_B crosswalk;

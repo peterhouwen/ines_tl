@@ -6,11 +6,17 @@
 #pragma once
 
 typedef enum {
-    INIT,
-    DRIVE,
-    SLOW,
-    STOP
-} t_state_machine;
+    STOP,
+    PREPARE,
+    GO,
+    SLOW
+} t_state_machine_A;
+
+typedef enum {
+    HALT,
+    WALK,
+    HURRY
+} t_state_machine_B;
 
 
 /***End of File**************************************************************/

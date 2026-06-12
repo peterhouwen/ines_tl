@@ -1,5 +1,5 @@
-/** @file traffic_light.c
- *  @brief Traffic light.
+/** @file traffic_light1.c
+ *  @brief Traffic light 1.
  */
 
 /****************************************************************************
@@ -26,23 +26,19 @@ void traffic_light(void *arg)
 
     while (true)
     {
-        switch (state)
-        //switch(0)
+        switch (road)
         {
-        case INIT:
-            io_handle.register_write_byte(0x12, 0x02); // yellow
-            vTaskDelay(500 / portTICK_PERIOD_MS);
-            io_handle.register_write_byte(0x12, 0x00); // off
-            vTaskDelay(500 / portTICK_PERIOD_MS);
+        case STOP:
+            io_handle.register_write_byte(0x12, 0x04); // red
             break;
-        case DRIVE:
+        case PREPARE:
+            io_handle.register_write_byte(0x12, 0x06); // red and yellow
+            break;
+        case GO:
             io_handle.register_write_byte(0x12, 0x01); // green
             break;
         case SLOW:
             io_handle.register_write_byte(0x12, 0x02); // yellow
-            break;
-        case STOP:
-            io_handle.register_write_byte(0x12, 0x04); // red
             break;
         }
         vTaskDelay(100 / portTICK_PERIOD_MS);

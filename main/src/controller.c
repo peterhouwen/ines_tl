@@ -13,8 +13,8 @@
 
 static const char *TAG = "controller";
 
-t_state_machine state = INIT;
-t_state_machine state2 = INIT;
+t_state_machine_A road = STOP;
+t_state_machine_B crosswalk = HALT;
 
 /****************************************************************************
  * Function : controller()
@@ -26,15 +26,22 @@ void controller(void *arg)
 
     while (true)
     {
+        road = STOP;
+        crosswalk = WALK;
+        ESP_LOGI(TAG, "road: stop");
+        vTaskDelay(3000 / portTICK_PERIOD_MS);
+        crosswalk = HURRY;
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        crosswalk = HALT;
+        road = PREPARE;
+        ESP_LOGI(TAG, "road: prepare");
         vTaskDelay(1000 / portTICK_PERIOD_MS);
-        state = DRIVE;
-        state2 = STOP;
-        ESP_LOGI(TAG, "road");
-
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-        state = STOP;
-        state2 = DRIVE;
-        ESP_LOGI(TAG, "crosswalk");
+        road = GO;
+        ESP_LOGI(TAG, "road: go");
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        road = SLOW;
+        ESP_LOGI(TAG, "road: slow");
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 }
 
