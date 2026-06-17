@@ -49,7 +49,8 @@ void button(void *arg)
     get_io_handle(&io_handle);
     
     gpio_set_direction(INPUT_PIN, GPIO_MODE_INPUT);
-    gpio_set_intr_type(INPUT_PIN, GPIO_INTR_POSEDGE);
+    gpio_set_pull_mode(INPUT_PIN, GPIO_PULLUP_ONLY);
+    gpio_set_intr_type(INPUT_PIN, GPIO_INTR_NEGEDGE);
 
     gpio_install_isr_service(0);
     gpio_isr_handler_add(INPUT_PIN, gpio_isr_handler, (void *)INPUT_PIN);

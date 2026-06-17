@@ -49,7 +49,7 @@ void init_hardware()
     io_handle.register_write_byte(0x05, 1 << 3); // IO3 Interrupt on change
     io_handle.register_write_byte(0x07, 1 << 3); // IO3 Default value
     io_handle.register_write_byte(0x09, 1 << 3); // IO3 Compare against default value
-    io_handle.register_write_byte(0x0B, 1 << 1); // Interrupt pin active high
+    io_handle.register_write_byte(0x0B, 1 << 2); // Interrupt Open-drain output
 //    io_handle.register_write_byte(0x12, 0x00);
 //    io_handle.register_write_byte(0x13, 0x00);
     /* Clear interrupt*/
