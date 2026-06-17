@@ -8,6 +8,7 @@
 #include "controller.h"
 #include "traffic_light1.h"
 #include "traffic_light2.h"
+#include "button.h"
 
 void app_main(void)
 {
@@ -16,6 +17,8 @@ void app_main(void)
     launch_controller();
     launch_traffic_light();
     launch_traffic_light2();
+    launch_button();
+    //vTaskStartScheduler();
 
     for(;;)
     {
