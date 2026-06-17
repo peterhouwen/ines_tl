@@ -1,17 +1,11 @@
-menu "Blink configuration"
+menu "GPIO configuration"
 
-    config BLINK_GPIO
-        int "GPIO pin number"
+    config GPIO_INPUT_0
+        int "GPIO input pin 0"
         #range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
-        default 25
+        default 15
         help
-            The GPIO pin number to which the LED is connected.
+            GPIO pin number to be used as GPIO_INPUT_IO_0.
 
-    config BLINK_PERIOD
-        int "Blink period in milliseconds"
-        range 10 3600000
-        default 1000
-        help
-            The time that the LED will be turned on and off.
 
 endmenu
