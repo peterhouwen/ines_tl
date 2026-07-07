@@ -15,7 +15,8 @@ hal_io_t io =
 {
     .init = mcp23017_init,
     .register_read = mcp23017_register_read,
-    .register_write_byte = mcp23017_register_write_byte
+    .register_write_byte = mcp23017_register_write_byte,
+    .register_set_level = mcp23017_register_set_level
 };
 
 /****************************************************************************

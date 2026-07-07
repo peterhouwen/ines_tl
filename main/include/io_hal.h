@@ -16,6 +16,7 @@ typedef struct
     void (*init) ();
     void (*register_read) (uint8_t const reg, uint8_t * const state, size_t const len);
     void (*register_write_byte) (uint8_t const reg, uint8_t const value);
+    void (*register_set_level) (uint8_t const reg, uint8_t const bitmask, uint8_t const level);
 } hal_io_t;
 
 /****************************************************************************

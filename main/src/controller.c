@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/timers.h"
 #include "esp_log.h"
 #include "types.h"
 #include "io_hal.h"
@@ -19,6 +20,8 @@ t_state_machine_B crosswalk = HALT;
 
 TaskHandle_t xHandleController = NULL;
 extern TaskHandle_t xHandleButton;
+
+//xTimerCreate("Prepare", pdMS_TO_TICKS(1000 / portTICK_PERIOD_MS), pdFALSE, 0, myTimerCallback);
 
 /****************************************************************************
  * Function : controller()

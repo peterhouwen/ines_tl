@@ -37,5 +37,6 @@
 void mcp23017_init(void);
 void mcp23017_register_read(uint8_t reg, uint8_t * data, size_t len);
 void mcp23017_register_write_byte(uint8_t reg, uint8_t value);
+void mcp23017_register_set_level(uint8_t reg, uint8_t bitmask, uint8_t level);
 
 /***End of File**************************************************************/

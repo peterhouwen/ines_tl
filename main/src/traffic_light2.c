@@ -24,20 +24,26 @@ void traffic_light2(void *arg)
 
     get_io_handle(&io_handle);
 
+    io_handle.register_set_level(0x13, 1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+
     while (true)
     {
         switch (crosswalk)
         {
         case HALT:
-            io_handle.register_write_byte(0x13, 0x04); // red
+            io_handle.register_set_level(0x13, 
+                1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+            io_handle.register_set_level(0x13, 1 << 2, 1); // red
             break;
         case WALK:
-            io_handle.register_write_byte(0x13, 0x01); // green
+            io_handle.register_set_level(0x13, 
+                1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+            io_handle.register_set_level(0x13, 1 << 0, 1); // green
             break;
         case HURRY:
-            io_handle.register_write_byte(0x13, 0x00); // off
+            io_handle.register_set_level(0x13, 1 << 0, 0); // off
             vTaskDelay(250 / portTICK_PERIOD_MS);
-            io_handle.register_write_byte(0x13, 0x01); // green
+            io_handle.register_set_level(0x13, 1 << 0, 1); // green
             vTaskDelay(250 / portTICK_PERIOD_MS);
             break;
         }

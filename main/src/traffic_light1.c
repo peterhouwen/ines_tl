@@ -24,21 +24,29 @@ void traffic_light(void *arg)
 
     get_io_handle(&io_handle);
 
+    io_handle.register_set_level(0x12, 1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+
     while (true)
     {
         switch (road)
         {
         case STOP:
-            io_handle.register_write_byte(0x12, 0x04); // red
+            io_handle.register_set_level(0x12, 
+                1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+            io_handle.register_set_level(0x12, 1 << 2, 1); // red
             break;
         case PREPARE:
-            io_handle.register_write_byte(0x12, 0x06); // red and yellow
+            io_handle.register_set_level(0x12, 1 << 1, 1); // red and yellow
             break;
         case GO:
-            io_handle.register_write_byte(0x12, 0x01); // green
+            io_handle.register_set_level(0x12, 
+                1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+            io_handle.register_set_level(0x12, 1 << 0, 1); // green
             break;
         case SLOW:
-            io_handle.register_write_byte(0x12, 0x02); // yellow
+            io_handle.register_set_level(0x12, 
+                1 << 0 | 1 << 1 | 1 << 2, 0); // turn LED off
+            io_handle.register_set_level(0x12, 1 << 1, 1); // yellow
             break;
         }
         vTaskDelay(100 / portTICK_PERIOD_MS);

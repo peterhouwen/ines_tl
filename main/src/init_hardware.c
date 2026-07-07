@@ -29,6 +29,7 @@ static void i2c_master_init(i2c_master_bus_handle_t *bus_handle)
     ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, bus_handle));
 }
 
+
 /****************************************************************************
  * Function : init_hardware()
  ****************************************************************************/
@@ -42,16 +43,15 @@ void init_hardware()
     hal_io_t io_handle;
     get_io_handle(&io_handle);
     io_handle.init();
-    io_handle.register_write_byte(0x00, 0x00); // GPA OUTPUT
-    io_handle.register_write_byte(0x01, 0x00); // GPB OUTPUT
-    io_handle.register_write_byte(0x01, 1 << 3); // IO3 INPUT
-    io_handle.register_write_byte(0x0D, 1 << 3); // IO3 Pull up
-    io_handle.register_write_byte(0x05, 1 << 3); // IO3 Interrupt on change
-    io_handle.register_write_byte(0x07, 1 << 3); // IO3 Default value
-    io_handle.register_write_byte(0x09, 1 << 3); // IO3 Compare against default value
-    io_handle.register_write_byte(0x0B, 1 << 2); // Interrupt Open-drain output
-//    io_handle.register_write_byte(0x12, 0x00);
-//    io_handle.register_write_byte(0x13, 0x00);
+    io_handle.register_write_byte(0x00, 0x00);     // GPA OUTPUT
+    io_handle.register_write_byte(0x01, 0x00);     // GPB OUTPUT
+    io_handle.register_set_level(0x01, 1 << 3, 1); // IO3 INPUT
+    io_handle.register_set_level(0x0D, 1 << 3, 1); // IO3 Pull up
+    io_handle.register_set_level(0x05, 1 << 3, 1); // IO3 Interrupt on change
+    io_handle.register_set_level(0x07, 1 << 3, 1); // IO3 Default value
+    io_handle.register_set_level(0x09, 1 << 3, 1); // IO3 Compare against default value
+    io_handle.register_set_level(0x0B, 1 << 2, 1); // Interrupt Open-drain output
+
     /* Clear interrupt*/
     io_handle.register_read( 0x13, &value, 1);
 
